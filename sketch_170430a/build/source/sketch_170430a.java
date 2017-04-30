@@ -3,6 +3,8 @@ import processing.data.*;
 import processing.event.*; 
 import processing.opengl.*; 
 
+import processing.net.*; 
+
 import java.util.HashMap; 
 import java.util.ArrayList; 
 import java.io.File; 
