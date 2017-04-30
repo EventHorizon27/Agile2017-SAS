@@ -5,7 +5,7 @@ import org.rsg.lib.Log;
 class Database {
 
 
-
+  boolean isExisting;
   int nullvar=000;
   int length;
   String[] temp= new String[length];
@@ -75,17 +75,25 @@ class Database {
   void networkRead() {
     if (c.readString=="insertUser") {//send if you want to have user inserted
       getUser[1]=c.readString();//username
+      for (int i=0; i<length; i++) {
+        if (c.readString()==users[i[1]]) {
+          isExisting=true
+        }
+        else(){
+          isExisting=false;
+        }
       delay(5);
+      if(isExisting==false{
       getUser[2]=c.readString();//password
       delay(5);
       getUser[3].readString();//interests
       database.insert(getUser);//insert
       c.write("done");
-    }
+    }}}
     if (c.readString=="login") {
       int user;
-      for (int i=0; i<length; i++) {
-        if (c.readString()==users[i[1]]) {
+
+
           user=i;
           c.write("user found");
           delay(5);
@@ -98,16 +106,14 @@ class Database {
       }
     }
   } // networkRead
-/*void debug(int checkTimes){
+void debug(int checkTimes){
   CarnivoreP5 c2;
   c2 = new CarnivoreP5(this);
-  for(int i=0;i<checkTimes;i++){
-  void packetEvent(CarnivorePacket p){
-    println("(" + p.strTransportProtocol + " packet) " + p.senderSocket() + " > " + p.receiverSocket());
-    //println("Payload: " + p.ascii());
-    //println("---------------------------\n");
-  }
+
+
+if(c.readString=="ping"){
+c.write("Got ping"); //c;
 }
 
-}*/
+}
 } // class Database
