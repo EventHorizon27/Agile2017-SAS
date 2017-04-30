@@ -89,7 +89,7 @@ class Database {
       getUser[3].readString();//interests
       database.insert(getUser);//insert
       c.write("done");
-    }}}
+    }}
     if (c.readString=="login") {
       int user;
 
@@ -104,7 +104,7 @@ class Database {
       } else {
         c.write("wrong password");
       }
-    }
+
   } // networkRead
 void debug(int checkTimes){
   CarnivoreP5 c2;
