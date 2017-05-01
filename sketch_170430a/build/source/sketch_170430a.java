@@ -138,9 +138,13 @@ class Database {
 
 
 boolean trigger=false;
+
 class Database {
 
-  Client c;
+Client c;
+String ip;
+int port;
+String hostName;
   boolean isExisting;
   int nullvar=000;
   int length;
@@ -152,7 +156,12 @@ class Database {
 
 
 
-  Database(int arraylength, String[][]usersinternal) {
+  Database(int arraylength, String[][]usersinternal,String ipToUse,int portToUse,String host) {
+    c = new Client(this, ip, port);  // Connect to server on port
+
+ip=ipToUse;
+port=portToUse;
+hostName=host;
     arraylength=length;
     usersinternal= new String[arraylength][3];
     for (int i=0; i<length; i++) {
@@ -201,8 +210,7 @@ class Database {
   } // deleteuser
 
 
-  public void networkStart(String IP,int port , String HostName) {
-    c = new Client(this, IP, port);  // Connect to server on port
+  public void networkStart(String ip,int port , String hostName) {
 
     c.write(HostName); // Be polite and say who we are
   }   // networkStart

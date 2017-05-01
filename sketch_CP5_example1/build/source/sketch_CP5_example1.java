@@ -5,6 +5,7 @@ import processing.opengl.*;
 
 import org.rsg.carnivore.*; 
 import org.rsg.lib.Log; 
+import processing.net.*; 
 
 import java.util.HashMap; 
 import java.util.ArrayList; 
@@ -46,6 +47,26 @@ public void packetEvent(CarnivorePacket p){
   println("(" + p.strTransportProtocol + " packet) " + p.senderSocket() + " > " + p.receiverSocket());
   //println("Payload: " + p.ascii());
   //println("---------------------------\n");
+}
+
+
+Client c;
+String data;
+
+public void setup() {
+  size(200, 200);
+  background(50);
+  fill(200);
+  c = new Client(this, "www.ucla.edu", 80);  // Connect to server on port 80
+  c.write("GET / HTTP/1.0\n");  // Use the HTTP "GET" command to ask for a webpage
+  c.write("Host: my_domain_name.com\n\n"); // Be polite and say who we are
+}
+
+public void draw() {
+  if (c.available() > 0) {    // If there's incoming data from the client...
+    data += c.readString();   // ...then grab it and print it
+    println(data);
+  }
 }
   public void settings() {  size(600, 400); }
   static public void main(String[] passedArgs) {
