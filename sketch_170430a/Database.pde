@@ -20,6 +20,7 @@ class Database {
   int length;
     String[] tempinterests= new String[length];
   String[] temp= new String[length];
+  String[] tempPasswords= new String[length];
   String insert=";";
   String[] merge=new String[3];
   String[][] users = new String[length][3];
@@ -157,7 +158,8 @@ void startup(){
         }
       }
     }
-  } // networkRead
+  }
+// networkRead
   /*void debug(int checkTimes){
    CarnivoreP5 c2;
    c2 = new CarnivoreP5(this);
@@ -170,7 +172,31 @@ void startup(){
    println("(" + c2.strTransportProtocol + " packet) " + c2.senderSocket() + " > " + c2.receiverSocket());
    }
    }*/
-   void
+   void shutdown(){
+     for(int z=0;z<length;z++){
+       temp[z]=users[z][1];
+       tempPasswords=users[z][2];
+       tempinterests=users[z][23;
+       SecretKeySpec skeySpec_encode = new SecretKeySpec(key.getBytes("UTF-8"), "AES");
+
+       Cipher cipher_encode = Cipher.getInstance("AES/ECB/PKCS5PADDING"); //AES-CBC with IV encoding, ECB is used without the IV, example shown on <a href="http://aesencryption.net/" target="_blank" rel="nofollow">http://aesencryption.net/</a>
+       cipher_encode.init(Cipher.ENCRYPT_MODE, skeySpec_encode);
+
+       byte[] encrypted = cipher_encode.doFinal(tempPasswords[z].getBytes());
+
+               //encode without padding: Base64.getEncoder().withoutPadding().encodeToString(encrypted));
+               //encode with padding:  Base64.getEncoder().encodeToString(encrypted));
+               encryptedpasswords[z] = DatatypeConverter.printBase64Binary(encrypted);
+       if(z==length){
+         saveStrings("usernames.txt",temp);
+         saveStrings("passwords.txt",encryptedpasswords);
+         saveStrings("interests.txt",tempinterests);
+         c.clear();
+         exit();
+       }
+     }
+
+   }
 } // class Database
 
 void setup() {
