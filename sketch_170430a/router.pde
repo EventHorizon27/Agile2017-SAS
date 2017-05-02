@@ -30,6 +30,7 @@ class serverRouter{
     managerPort=managerport;
   }
   void networkStart() {
+      c2.write(c.readString());
     c = new Client(_myApplet, inIp, inPort);  // Connect to server on port
     c2 = new Client(_myApplet,outIp,outPort);
     c3 = new Client(_myApplet,managerPort,managerIp);
@@ -50,12 +51,10 @@ class serverRouter{
       if(c2.active()==false){
         c3.write(4);
       }
-      if(c.read()==8){
-        c2.write(c.read());
-      }
-      else  if(c.read()==9){
-        c2.write(c.readString());
-      }
+
+
+
+
       if(c3.read()==2){
         databaseIP=c3.readString();
       }
