@@ -8,11 +8,12 @@ import org.rsg.lib.Log;
  boolean trigger=false;
 String key = "  8cd82e4af6649117";
 //String message= "0123456789012345";
-String[] encryptedpasswords
-
+boolean update;
 
 
 class Database {
+  String[] encryptedpasswords
+
 String permanenentIP;
 int permanentPort;
 String permanentHost;
@@ -131,9 +132,21 @@ void updateFromMaster(){
 }
 
 }
-  void networkRead() {
+void write(String ip,String message,int port){
+  Client writer;
+  writer=new Client(_myApplet,ip,port);
+  writer.write(message);
 
-    if (c.readString()=="insertUser") {//send if you want to have user inserted
+}
+void setField(int userNumber,int field,String toSet){
+  users[userNumber][field]=toSet;
+}
+  void networkRead() {
+if(c.read()==3){
+  update=true;
+
+}
+    if (c.read()==2) {//send if you want to have user inserted
       getUser[1]=c.readString();//username
       for (int i=0; i<users.length; i++) {
         if (c.readString()==users[i][1]) {
@@ -157,26 +170,29 @@ void updateFromMaster(){
           for (int z=0; z<temp.length; z++) {
             users[i]=split(temp[i], ";");
           }//insert
-          c.write("done");
+          c.write(2);
         }
       }
-      if (c.readString()=="login") {
+      if (c.read()==1) {
         username=c.readString();
 
         for (int l=0; l<users.length; l++) {
           if (username==users[l][1]) {
             user=l;
-            c.write("user found");
+            c.write(1);
             delay(5);
             userFound=true;
+          }
+          else{
+            c.write(0);
           }
         }
       }
       if (userFound==true) {
         if (c.readString()==users[user][2]) {
-          c.write("correct password");
+          c.write(1);
         } else {
-          c.write("wrong password");
+          c.write(0);
         }
       }
     }
@@ -225,6 +241,10 @@ void updateFromMaster(){
        }
      }
 
+   }
+   void networkShutdown(){
+     c.clear();
+     c.stop();
    }
 } // class Database
 
