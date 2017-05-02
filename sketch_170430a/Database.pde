@@ -13,9 +13,11 @@ boolean update;
 
 class Database {
   String[] encryptedpasswords
-
+Client c2;
 String permanenentIP;
 int permanentPort;
+String permanenentServerIP;
+int permanentServerPort;
 String permanentHost;
   String username;
   Client c;
@@ -108,11 +110,14 @@ void startup(){
   } // deleteuser
 
 
-  void networkStart(String ip, int port, String hostname) {
+  void networkStart(String ip, int port, String hostname,String serverIP,int serverPort) {
     c = new Client(_myApplet, ip, port);  // Connect to server on port
+    c2 = new Client(_myApplet, serverIP, serverPort);
     permanenentIP=ip;
     permanentPort=port;
     permanentHost=hostname;
+    permanenentServerIP=serverIP;
+    permanentServerPort=serverPort;
     c.write(hostname); // Be polite and say who we are
     c.write(c.ip());
   }   // networkStart
@@ -141,7 +146,8 @@ void write(String ip,String message,int port){
 void setField(int userNumber,int field,String toSet){
   users[userNumber][field]=toSet;
 }
-  void networkRead() {
+  void network() {
+    c2.write(2);
 if(c.read()==3){
   update=true;
 

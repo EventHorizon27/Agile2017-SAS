@@ -8,7 +8,7 @@ import org.rsg.lib.Log;
 int activity;
 boolean checkactive;
 int time;
-
+String databaseIP;
 class serverRouter{
   String inIp;
   String outIp;
@@ -56,6 +56,10 @@ class serverRouter{
       else  if(c.read()==9){
         c2.write(c.readString());
       }
+      if(c3.read()==2){
+        databaseIP=c3.readString();
+      }
+
     }
     void activityCheck(){
       checkactive=true;
