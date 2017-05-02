@@ -56,6 +56,7 @@ void startup(){
     cipher_decode.init(Cipher.DECRYPT_MODE, skeySpec_decode);
 
     byte[] decrypted_original = cipher_decode.doFinal(DatatypeConverter.parseBase64Binary(encryptedpasswords[z]));
+    encryptedpasswords[z] = DatatypeConverter.printBase64Binary(decrypted_original);
     users[z][1]=temp[z];
     users[z][2] = decrypted_original;
     users[z][3]=tempinterests;
