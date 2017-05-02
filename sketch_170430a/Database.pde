@@ -7,14 +7,18 @@ import org.rsg.carnivore.*;
 import org.rsg.lib.Log;
  boolean trigger=false;
 String key = "  8cd82e4af6649117";
-String message= "0123456789012345";
+//String message= "0123456789012345";
 String[] encryptedpasswords
 
 
 
 class Database {
+String permanenentIP;
+int permanentPort;
+String permanentHost;
   String username;
   Client c;
+  Client mirror;
   boolean isExisting;
   int nullvar=000;
   int length;
@@ -105,11 +109,28 @@ void startup(){
 
   void networkStart(String ip, int port, String hostname) {
     c = new Client(_myApplet, ip, port);  // Connect to server on port
-
+    permanenentIP=ip;
+    permanentPort=port;
+    permanentHost=hostname;
     c.write(hostname); // Be polite and say who we are
+    c.write(c.ip());
   }   // networkStart
 
+void updateSlave(String mirrorIP,String port){
+  mirror=new Client(_myApplet,mirrorIP,port);
+for(int i=0;i<3*length;i++){
+  mirror.write(users[i][i%3]);
 
+}
+
+}
+void updateFromMaster(){
+  for(int i=0;i<3*length;i++){
+    users[i][i%3]=mirror.readString();
+
+}
+
+}
   void networkRead() {
 
     if (c.readString()=="insertUser") {//send if you want to have user inserted
@@ -164,8 +185,6 @@ void startup(){
   /*void debug(int checkTimes){
    CarnivoreP5 c2;
    c2 = new CarnivoreP5(this);
-
-
    if(c.readString()=="ping"){
    c.write("Got ping"); //c;
    }
@@ -173,6 +192,14 @@ void startup(){
    println("(" + c2.strTransportProtocol + " packet) " + c2.senderSocket() + " > " + c2.receiverSocket());
    }
    }*/
+   void networkRestart(){
+     c.clear();
+     c.stop();
+     c = new Client(_myApplet, permanenentIP, permanentPort);  // Connect to server on port
+
+     c.write(permanentHost); // Be polite and say who we are
+     c.write(c.ip());
+   }
    void shutdown(){
      for(int z=0;z<length;z++){
        temp[z]=users[z][1];
@@ -193,6 +220,7 @@ void startup(){
          saveStrings("passwords.txt",encryptedpasswords);
          saveStrings("interests.txt",tempinterests);
          c.clear();
+         c.stop();
          exit();
        }
      }
