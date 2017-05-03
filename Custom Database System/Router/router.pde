@@ -1,7 +1,4 @@
-import javax.crypto.Cipher;
-import javax.crypto.spec.IvParameterSpec;
-import javax.crypto.spec.SecretKeySpec;
-import javax.xml.bind.DatatypeConverter;
+
 import processing.net.*;
 import org.rsg.carnivore.*;
 import org.rsg.lib.Log;
@@ -64,9 +61,25 @@ class serverRouter{
       checkactive=true;
       time=millis();
         if(millis()==time+60000){
+          c3.write(12);
+          delay(5);
           c3.write(activity);
 
         }
+    }
+    void write(String ip,String message, int port){
+      Client writer;
+      writer= new Client(_myApplet,ip,port){
+        writer.write(message);
+      }
+    }
+    void networkStop(){
+      c.clear();
+      c2.clear();
+      c3.clear();
+      c.stop();
+      c2.stop();
+      c3.stop();
     }
 }
 void clientEvent(Client c) {
