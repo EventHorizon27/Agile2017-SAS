@@ -6,13 +6,12 @@ import processing.net.*;
 import org.rsg.carnivore.*;
 import org.rsg.lib.Log;
  boolean trigger=false;
-String key = "  8cd82e4af6649117";
-//String message= "0123456789012345";
+String key = "8cd82e4af6649117";
 boolean update;
 
 
 class Database {
-  String[] encryptedpasswords
+String[] encryptedpasswords
 Client c2;
 String permanenentIP;
 int permanentPort;
@@ -25,7 +24,7 @@ String permanentHost;
   boolean isExisting;
   int nullvar=000;
   int length;
-    String[] tempinterests= new String[length];
+  String[] tempinterests= new String[length];
   String[] temp= new String[length];
   String[] tempPasswords= new String[length];
   String insert=";";
@@ -234,8 +233,7 @@ if(c.read()==3){
 
        byte[] encrypted = cipher_encode.doFinal(tempPasswords[z].getBytes());
 
-               //encode without padding: Base64.getEncoder().withoutPadding().encodeToString(encrypted));
-               //encode with padding:  Base64.getEncoder().encodeToString(encrypted));
+
                encryptedpasswords[z] = DatatypeConverter.printBase64Binary(encrypted);
        if(z==length){
          saveStrings("usernames.txt",temp);
