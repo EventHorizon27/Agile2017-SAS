@@ -1,16 +1,23 @@
-import javax.crypto.Cipher;
-import javax.crypto.spec.IvParameterSpec;
-import javax.crypto.spec.SecretKeySpec;
-import javax.xml.bind.DatatypeConverter;
+
 import processing.net.*;
 import org.rsg.carnivore.*;
 import org.rsg.lib.Log;
- boolean trigger=false;
-String key = "8cd82e4af6649117";
+boolean trigger=false;
+
 boolean update;
 
 
 class Database {
+  StringList t;
+  StringList usernames;
+  StringList passwords;
+  StringList interests;
+  String[] query=new String[3];
+  String nullify;
+  String[][] splitBlock;
+  int[] block = new int[2];
+  String[] none= new String[2];
+  String[] lengthStr = new String[2];
 String[] encryptedpasswords
 Client c2;
 String permanenentIP;
@@ -18,91 +25,122 @@ int permanentPort;
 String permanenentServerIP;
 int permanentServerPort;
 String permanentHost;
-  String username;
-  Client c;
-  Client mirror;
-  boolean isExisting;
-  int nullvar=000;
-  int length;
-  String[] tempinterests= new String[length];
-  String[] temp= new String[length];
-  String[] tempPasswords= new String[length];
-  String insert=";";
-  String[] merge=new String[3];
-  String[][] users = new String[length][3];
-  String[] getUser= new String[3];
-  boolean userFound;
-  String[] encryptedpasswords= new String[length];
-
+String username;
+Client c;
+Client mirror;
+boolean isExisting;
+int nullvar=000;
+int length;
+String[] tempinterests= new String[length];
+String[] temp= new String[length];
+String[] tempPasswords= new String[length];
+String insert=";";
+String[] merge=new String[3];
+String[][] users = new String[length][3];
+String[] getUser= new String[3];
+boolean userFound;
+String[] encryptedpasswords= new String[length];
 int user=0;
 PApplet _myApplet;
 
-  Database(int arraylength, String[][]usersinternal, PApplet myApplet) {
-    arraylength=length;
+Database(int arraylength, PApplet myApplet) {
+  lengthStr[1]=str(arraylength);
+  saveStrings("length.txt",lengthStr);
+    length=arraylength;
     _myApplet=myApplet;
-    usersinternal= new String[arraylength][3];
-    for (int i=0; i<length; i++) {
-      for (int x=0; x<2; x++) {
-        length=arraylength;
-        users[i][x]= usersinternal[i][x];
-      }
-    }
+
   } // Database (constructor)
 
 
 void startup(){
 
-  temp = loadStrings("usernames.txt");
-  encryptedpasswords = loadStrings("passwords.txt");
-  tempinterests=loadStrings("interests.txt");
-  for(int z; z<length;z++){
-    SecretKeySpec skeySpec_decode = new SecretKeySpec(key.getBytes("UTF-8"), "AES");
+  temp = loadStrings(/Users/colechristini/Desktop/DatabaseFiles/usernames.txt);
+  tempPasswords=loadStrings(/Users/colechristini/Desktop/DatabaseFiles/passwordsTemp.txt);
+  tempinterests=loadStrings(/Users/colechristini/Desktop/DatabaseFiles/interests.txt);
 
-    Cipher cipher_decode = Cipher.getInstance("AES/ECB/PKCS5PADDING");
-    cipher_decode.init(Cipher.DECRYPT_MODE, skeySpec_decode);
+    usernames.append(temp);
+    passwords.append(tempPasswords);
+    interests.append(tempinterests);
 
-    byte[] decrypted_original = cipher_decode.doFinal(DatatypeConverter.parseBase64Binary(encryptedpasswords[z]));
-    encryptedpasswords[z] = DatatypeConverter.printBase64Binary(decrypted_original);
-    users[z][1]=temp[z];
-    users[z][2] = decrypted_original;
-    users[z][3]=tempinterests;
+      none[1]=int(nullvar);
+      none[2]=int(nullvar);
+      saveStrings(/Users/colechristini/Desktop/DatabaseFiles/passwordsTemp.txt,none);
+
+    }
+  }
+
+void blockSelect(int start,int end){
+
+  block[0]=start;
+  block[1]=end;
+}
+void blockDelete(){
+  for(int i=start;i<end;i++){
+    usernames.remove(z);
+    passwords.remove(z);
+    interests.remove(z);
+
+  }
+
 }
 
+void splitByBlock(int length){
+  splitBlocks=new String[length][3];
+  for(int i=start;i<end;i++){
+    splitBlocks[i][1]=usernames.get(i);
+    splitBlocks[i][2]=passwords.get(i);
+    splitBlocks[i][3]=interests.get(i);
+    usernames.set(i,str(nullvar))
+    passwords.set(i,str(nullvar))
+    interests.set(i,str(nullvar))
+
+  }
 
 
+
+
+
+}
 
 }
   void sortdata() {
+    String[] x = new String[3];
     for (int q=0; q<length; q++) {
-      temp[q]=users[q][0]+insert+users[q][1]+insert+users[q][2];
+      temp[q]=usernames.get(q)+insert+passwords.get(q)+insert+interests.get(q);
       sort(temp);
     }
     for (int i=0; i<temp.length; i++) {
-      users[i]=split(temp[i], ";");
+      x[i]=split(temp[i], ";");
+      usernames.set(i,x[1]);
+      passwords.set(i,x[2]);
+      interests.set(i,x[3]);
     }
   } // sortdata
 
 
   void insert(String[] user) {
     user = new String[3];
-    for (int v=0; v<2; v++) {
-      users[length-1][v]=user[v];
-    }
-    for (int q=0; q<length; q++) {
-      temp[q]=users[q][0]+insert+users[q][1]+insert+users[q][2];
+
+
+      temp[length-1]=users[q][0]+insert+users[q][1]+insert+users[q][2];
+
       sort(temp);
-    }
-    for (int i=0; i<temp.length; i++) {
-      users[i]=split(temp[i], ";");
-    }
+
+      for (int i=0; i<temp.length; i++) {
+        x[i]=split(temp[i], ";");
+        usernames.set(i,x[1]);
+        passwords.set(i,x[2]);
+        interests.set(i,x[3]);
+      }
   }  // insert
 
 
   void deleteuser(String toDelete) {
     for (int i=0; i<length; i++) {
-      if (users[i][0]==toDelete) {
-        for (int v=0; v<2; v++) {
-          users[i][v]=str(nullvar);
+      if (usernames.get(i)==toDelete) {
+          usernames.remove(i);
+          passwords.remove(i);
+          interests.remove(i);
         }
       }
     }
@@ -124,15 +162,19 @@ void startup(){
 void updateSlave(String mirrorIP,String port){
   mirror=new Client(_myApplet,mirrorIP,port);
 for(int i=0;i<3*length;i++){
-  mirror.write(users[i][i%3]);
+  tem p[i]=usernames.get(i)+insert+passwords.get(i)+insert+interests.get(i);
+  mirror.write(temp[i]);
 
 }
 
 }
 void updateFromMaster(){
   for(int i=0;i<3*length;i++){
-    users[i][i%3]=mirror.readString();
-
+    temp[i]=mirror.readString();
+    x[i]=split(temp[i], ";");
+    usernames.set(i,x[0]);
+    passwords.set(i,x[1]);
+    interests.set(i,x[2]);
 }
 
 }
@@ -143,6 +185,18 @@ void write(String ip,String message,int port){
 
 }
 void setField(int userNumber,int field,String toSet){
+  if(field==1){
+      username.set(userNumber,toSet);
+
+  }
+  if(field==2){
+    passwords.set(userNumber,toSet);
+
+  }
+  if(field==3){
+    interests.set(userNumber,toSet);
+
+  }
   users[userNumber][field]=toSet;
 }
   void network() {
@@ -151,7 +205,8 @@ if(c.read()==3){
   update=true;
 
 }
-    if (c.read()==2) {//send if you want to have user inserted
+    if (c.read()==2) {
+      getUser = new String[3];//send if you want to have user inserted
       getUser[1]=c.readString();//username
       for (int i=0; i<users.length; i++) {
         if (c.readString()==users[i][1]) {
@@ -164,17 +219,23 @@ if(c.read()==3){
           getUser[2]=c.readString();//password
           delay(5);
           getUser[3]=c.readString();//interests
-          getUser = new String[3];
-          for (int v=0; v<2; v++) {
-            users[length-1][v]=getUser[v];
+
+
+            usernames.append(getUser[0]);
+            passwords.append(getUser[1]);
+            interests.append(getUser[2]);
           }
+          String[] x = new String[3];
           for (int q=0; q<length; q++) {
-            temp[q]=users[q][0]+insert+users[q][1]+insert+users[q][2];
+            temp[q]=usernames.get(q)+insert+passwords.get(q)+insert+interests.get(q);
             sort(temp);
           }
-          for (int z=0; z<temp.length; z++) {
-            users[i]=split(temp[i], ";");
-          }//insert
+          for (int i=0; i<temp.length; i++) {
+            x[i]=split(temp[i], ";");
+            usernames.set(i,x[1]);
+            passwords.set(i,x[2]);
+            interests.set(i,x[3]);
+          }
           c.write(2);
         }
       }
@@ -194,7 +255,7 @@ if(c.read()==3){
         }
       }
       if (userFound==true) {
-        if (c.readString()==users[user][2]) {
+        if (c.readString()==users[user][1]) {
           c.write(1);
         } else {
           c.write(0);
@@ -222,23 +283,10 @@ if(c.read()==3){
      c.write(c.ip());
    }
    void shutdown(){
-     for(int z=0;z<length;z++){
-       temp[z]=users[z][1];
-       tempPasswords=users[z][2];
-       tempinterests=users[z][23;
-       SecretKeySpec skeySpec_encode = new SecretKeySpec(key.getBytes("UTF-8"), "AES");
 
-       Cipher cipher_encode = Cipher.getInstance("AES/ECB/PKCS5PADDING"); //AES-CBC with IV encoding, ECB is used without the IV, example shown on <a href="http://aesencryption.net/" target="_blank" rel="nofollow">http://aesencryption.net/</a>
-       cipher_encode.init(Cipher.ENCRYPT_MODE, skeySpec_encode);
-
-       byte[] encrypted = cipher_encode.doFinal(tempPasswords[z].getBytes());
-
-
-               encryptedpasswords[z] = DatatypeConverter.printBase64Binary(encrypted);
-       if(z==length){
-         saveStrings("usernames.txt",temp);
-         saveStrings("passwords.txt",encryptedpasswords);
-         saveStrings("interests.txt",tempinterests);
+         saveStrings(/Users/colechristini/Desktop/DatabaseFiles/usernames.txt,temp);
+         saveStrings(/Users/colechristini/Desktop/DatabaseFiles/passwordsTemp.txt,encryptedpasswords);
+         saveStrings(/Users/colechristini/Desktop/DatabaseFiles/interests.txt,tempinterests);
          c.clear();
          c.stop();
          exit();
@@ -250,6 +298,7 @@ if(c.read()==3){
      c.clear();
      c.stop();
    }
+
 } // class Database
 
 void setup() {

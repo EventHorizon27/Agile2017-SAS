@@ -10,7 +10,7 @@ import org.rsg.carnivore.*;
 import org.rsg.lib.Log;
 
 CarnivoreP5 c;
-String[] packets = new String[20000];
+String[] packets = new String[150];
 int i=0;
 int z=0;
 void setup(){
@@ -29,7 +29,8 @@ void packetEvent(CarnivorePacket p){
 
   i++;
   packets[i]="(" + p.strTransportProtocol + " packet) " + p.senderSocket() + " > " + p.receiverSocket();
-  if(z==20000){
+  if(z==100){
+    i=0;
     z++;
   saveStrings("Packets"+z+".txt", packets);
   println("(" + p.strTransportProtocol + " packet) " + p.senderSocket() + " > " + p.receiverSocket());
