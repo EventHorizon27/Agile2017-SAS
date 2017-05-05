@@ -162,7 +162,7 @@ void splitByBlock(int length){
 void updateSlave(String mirrorIP,String port){
   mirror=new Client(_myApplet,mirrorIP,port);
 for(int i=0;i<3*length;i++){
-  tem p[i]=usernames.get(i)+insert+passwords.get(i)+insert+interests.get(i);
+  temp[i]=usernames.get(i)+insert+passwords.get(i)+insert+interests.get(i);
   mirror.write(temp[i]);
 
 }
