@@ -155,7 +155,8 @@ for(int z=0;z<round(usernames.length()/pageSize);z++){
 for(int i=0;i<pageSize;i++){
 
   pageTemp[i]=usernames.get(i)+insert+passwords.get(i)+insert+interests.get(i);
-  if(i==pageSize){String f = new String[3];
+  if(i==pageSize){
+    String f = new String[3];
     f=split(pageTemp[0],";");
     usersGroupSort[z]=f[0];
     saveStrings("page"+z+".txt",pageTemp)
@@ -233,7 +234,7 @@ if(c.read()==3){
 }
     if (c.read()==2) {
       getUser = new String[3];//send if you want to have user inserted
-      getUser[1]=c.readString();//username
+      getUser[0]=c.readString();//username
       for (int i=0; i<users.length; i++) {
         if (c.readString()==users[i][1]) {
           isExisting=true;
@@ -309,10 +310,23 @@ if(c.read()==3){
      c.write(c.ip());
    }
    void shutdown(){
+     String[] pageTemp = new String[pageSize];
+     int z;
+          for(int i=0;i<round(usernames.length();i++){
+            if(usernames.get(0)==usersGroupSort[i]){
+                z=i;
 
-         saveStrings(/Users/colechristini/Desktop/DatabaseFiles/usernames.txt,temp);
-         saveStrings(/Users/colechristini/Desktop/DatabaseFiles/passwordsTemp.txt,encryptedpasswords);
-         saveStrings(/Users/colechristini/Desktop/DatabaseFiles/interests.txt,tempinterests);
+            }
+          }
+          for(int i=0;i<pageSize;i++){
+
+            pageTemp[i]=usernames.get(i)+insert+passwords.get(i)+insert+interests.get(i);
+            if(i==pageSize){
+              
+              saveStrings("page"+z+".txt",pageTemp)
+
+
+            }
          c.clear();
          c.stop();
          exit();
