@@ -8,16 +8,18 @@ boolean update;
 
 
 class Database {
-  StringList t;
-  StringList usernames;
-  StringList passwords;
-  StringList interests;
-  String[] query=new String[3];
-  String nullify;
-  String[][] splitBlock;
-  int[] block = new int[2];
-  String[] none= new String[2];
-  String[] lengthStr = new String[2];
+  boolean paged;
+  String[] usersGroupSort;
+StringList t;
+StringList usernames;
+StringList passwords;
+StringList interests;
+String[] query=new String[3];
+String nullify;
+String[][] splitBlock;
+int[] block = new int[2];
+String[] none= new String[2];
+String[] lengthStr = new String[2];
 String[] encryptedpasswords
 Client c2;
 String permanenentIP;
@@ -42,8 +44,9 @@ boolean userFound;
 String[] encryptedpasswords= new String[length];
 int user=0;
 PApplet _myApplet;
-
-Database(int arraylength, PApplet myApplet) {
+int pageSize;
+Database(int arraylength,int _pageSize, PApplet myApplet) {
+  pageSize=_pageSize;
   lengthStr[1]=str(arraylength);
   saveStrings("length.txt",lengthStr);
     length=arraylength;
@@ -145,7 +148,30 @@ void splitByBlock(int length){
       }
     }
   } // deleteuser
+void convertToPages(){
+  usersGroupSort=new String[round(usernames.length()/pageSize)];
+  String[] pageTemp = new String[pageSize];
+for(int z=0;z<round(usernames.length()/pageSize);z++){
+for(int i=0;i<pageSize;i++){
 
+  pageTemp[i]=usernames.get(i)+insert+passwords.get(i)+insert+interests.get(i);
+  if(i==pageSize){String f = new String[3];
+    f=split(pageTemp[0],";");
+    usersGroupSort[z]=f[0];
+    saveStrings("page"+z+".txt",pageTemp)
+
+
+  }
+
+
+
+}
+if(z==round(usernames.length()){
+
+  paged=true;
+}
+}
+}
 
   void networkStart(String ip, int port, String hostname,String serverIP,int serverPort) {
     c = new Client(_myApplet, ip, port);  // Connect to server on port
