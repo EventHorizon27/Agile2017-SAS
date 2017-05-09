@@ -8,16 +8,18 @@ boolean update;
 
 
 class Database {
-  StringList t;
-  StringList usernames;
-  StringList passwords;
-  StringList interests;
-  String[] query=new String[3];
-  String nullify;
-  String[][] splitBlock;
-  int[] block = new int[2];
-  String[] none= new String[2];
-  String[] lengthStr = new String[2];
+  boolean paged;
+  String[] usersGroupSort;
+StringList t;
+StringList usernames;
+StringList passwords;
+StringList interests;
+String[] query=new String[3];
+String nullify;
+String[][] splitBlock;
+int[] block = new int[2];
+String[] none= new String[2];
+String[] lengthStr = new String[2];
 String[] encryptedpasswords
 Client c2;
 String permanenentIP;
@@ -42,8 +44,9 @@ boolean userFound;
 String[] encryptedpasswords= new String[length];
 int user=0;
 PApplet _myApplet;
-
-Database(int arraylength, PApplet myApplet) {
+int pageSize;
+Database(int arraylength,int _pageSize, PApplet myApplet) {
+  pageSize=_pageSize;
   lengthStr[1]=str(arraylength);
   saveStrings("length.txt",lengthStr);
     length=arraylength;
@@ -54,9 +57,9 @@ Database(int arraylength, PApplet myApplet) {
 
 void startup(){
 
-  temp = loadStrings(/Users/colechristini/Desktop/DatabaseFiles/usernames.txt);
-  tempPasswords=loadStrings(/Users/colechristini/Desktop/DatabaseFiles/passwordsTemp.txt);
-  tempinterests=loadStrings(/Users/colechristini/Desktop/DatabaseFiles/interests.txt);
+  temp = loadStrings("/Users/colechristini/Desktop/DatabaseFiles/usernames.txt");
+  tempPasswords=loadStrings("/Users/colechristini/Desktop/DatabaseFiles/passwordsTemp.txt");
+  tempinterests=loadStrings("/Users/colechristini/Desktop/DatabaseFiles/interests.txt");
 
     usernames.append(temp);
     passwords.append(tempPasswords);
@@ -128,24 +131,88 @@ void splitByBlock(int length){
 
       for (int i=0; i<temp.length; i++) {
         x[i]=split(temp[i], ";");
-        usernames.set(i,x[1]);
-        passwords.set(i,x[2]);
-        interests.set(i,x[3]);
+        usernames.set(i,x[0]);
+        passwords.set(i,x[1]);
+        interests.set(i,x[2]);
       }
   }  // insert
 
 
   void deleteuser(String toDelete) {
+    int z;
+    String n;
+    usersGroupSort.append(toDelete);
+    usersGroupSort.sort();
     for (int i=0; i<length; i++) {
-      if (usernames.get(i)==toDelete) {
-          usernames.remove(i);
-          passwords.remove(i);
-          interests.remove(i);
-        }
+      if(toDelete==usersGroupSort.get(i)){
+        z=i-1;
+        n=str(z);
+
+      }
+      temp = loadStrings("/Users/colechristini/Desktop/DatabaseFiles/usernames"+n+".txt");
+      tempPasswords=loadStrings("/Users/colechristini/Desktop/DatabaseFiles/passwordsTemp"+n+".txt");
+      tempinterests=loadStrings("/Users/colechristini/Desktop/DatabaseFiles/interests"+n+".txt");
+
+        usernames.append(temp);
+        passwords.append(tempPasswords);
+        interests.append(tempinterests);
+        usernames.remove(z);
+        passwords.remove(z);
+        interests.remove(z);
+
+        int z;
+             for(int i=0;i<round(usernames.length();i++){
+               if(usernames.get(0)==usersGroupSort[i]){
+                   z=i;
+
+               }
+             }
+             for(int i=0;i<pageSize;i++){
+
+               pageTemp[i]=usernames.get(i)+insert+passwords.get(i)+insert+interests.get(i);
+               if(i==pageSize){
+                 int m;
+                 for(int q=0;q<usersGroupSort.length();q++){
+                   String f = new String[3];
+                   f=split(pageTemp[0],";");
+                   if(page)
+                 saveStrings("page"+z+".txt",pageTemp)
+                 usernames.clear();
+                 interests.clear().
+                 passwords.clear();
+
+               }
       }
     }
   } // deleteuser
+void convertToPages(){
+  usersGroupSort=new String[round(usernames.length()/pageSize)];
+  String[] pageTemp = new String[pageSize];
+for(int z=0;z<round(usernames.length()/pageSize);z++){
+for(int i=0;i<pageSize;i++){
 
+  pageTemp[i]=usernames.get(i)+insert+passwords.get(i)+insert+interests.get(i);
+  if(i==pageSize){
+    String f = new String[3];
+    f=split(pageTemp[0],";");
+    usersGroupSort[z]=f[0];
+    String x=str(z);
+    saveStrings("page"+x+".txt",pageTemp)
+    usernames.clear();
+    interests.clear().
+    passwords.clear();
+
+  }
+
+
+
+}
+if(z==round(usernames.length()){
+
+  paged=true;
+}
+}
+}
 
   void networkStart(String ip, int port, String hostname,String serverIP,int serverPort) {
     c = new Client(_myApplet, ip, port);  // Connect to server on port
@@ -161,20 +228,32 @@ void splitByBlock(int length){
 
 void updateSlave(String mirrorIP,String port){
   mirror=new Client(_myApplet,mirrorIP,port);
-for(int i=0;i<3*length;i++){
-  tem p[i]=usernames.get(i)+insert+passwords.get(i)+insert+interests.get(i);
+for(int i=0;i<pageSize;i++){
+  temp[i]=usernames.get(i)+insert+passwords.get(i)+insert+interests.get(i);
   mirror.write(temp[i]);
 
 }
 
 }
 void updateFromMaster(){
-  for(int i=0;i<3*length;i++){
+  String d;
+  String[] c =new String[pageSize][3];
+  for(int i=0;i<pageSize;i++){
     temp[i]=mirror.readString();
-    x[i]=split(temp[i], ";");
-    usernames.set(i,x[0]);
-    passwords.set(i,x[1]);
-    interests.set(i,x[2]);
+    c[i]=split(temp[i], ";");
+    usernames.set(i,c[i][0]);
+    passwords.set(i,c[i][1]);
+    interests.set(i,c[i][2]);
+    pageTemp[i]=usernames.get(i)+insert+passwords.get(i)+insert+interests.get(i);
+    if(i==pageSize){
+      for(int x=0;x<usersGroupSort.length();x++){
+        if(c[0][0]==usersGroupSort[i]){
+          d=str(i);
+        }
+        saveStrings("page"+d+".txt",pageTemp)
+
+    }
+    }
 }
 
 }
@@ -184,7 +263,7 @@ void write(String ip,String message,int port){
   writer.write(message);
 
 }
-void setField(int userNumber,int field,String toSet){
+/*void setField(int userNumber,int field,String toSet){
   if(field==1){
       username.set(userNumber,toSet);
 
@@ -198,7 +277,8 @@ void setField(int userNumber,int field,String toSet){
 
   }
   users[userNumber][field]=toSet;
-}
+}*/
+
   void network() {
     c2.write(2);
 if(c.read()==3){
@@ -207,7 +287,7 @@ if(c.read()==3){
 }
     if (c.read()==2) {
       getUser = new String[3];//send if you want to have user inserted
-      getUser[1]=c.readString();//username
+      getUser[0]=c.readString();//username
       for (int i=0; i<users.length; i++) {
         if (c.readString()==users[i][1]) {
           isExisting=true;
@@ -283,10 +363,23 @@ if(c.read()==3){
      c.write(c.ip());
    }
    void shutdown(){
+     String[] pageTemp = new String[pageSize];
+     String z;
+          for(int i=0;i<round(usernames.length();i++){
+            if(usernames.get(0)==usersGroupSort[i]){
+                z=str(i);
 
-         saveStrings(/Users/colechristini/Desktop/DatabaseFiles/usernames.txt,temp);
-         saveStrings(/Users/colechristini/Desktop/DatabaseFiles/passwordsTemp.txt,encryptedpasswords);
-         saveStrings(/Users/colechristini/Desktop/DatabaseFiles/interests.txt,tempinterests);
+            }
+          }
+          for(int i=0;i<pageSize;i++){
+
+            pageTemp[i]=usernames.get(i)+insert+passwords.get(i)+insert+interests.get(i);
+            if(i==pageSize){
+
+              saveStrings("page"+z+".txt",pageTemp);
+
+
+            }
          c.clear();
          c.stop();
          exit();
